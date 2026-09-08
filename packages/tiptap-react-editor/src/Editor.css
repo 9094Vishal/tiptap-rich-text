@@ -1,0 +1,1067 @@
+/**
+ * Default theme, expressed entirely as CSS custom properties scoped to
+ * `.rte-outer` (never `:root`) so dropping this stylesheet into a host app
+ * never leaks variables into its global scope. Override any token by
+ * targeting `.rte-outer` with higher specificity, or by setting the same
+ * custom properties on an ancestor element.
+ */
+.rte-outer {
+  --rte-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --rte-mono-font: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --rte-font-size: 14px;
+
+  --rte-bg: #ffffff;
+  --rte-text: #1f2328;
+  --rte-text-muted: #6b7280;
+  --rte-placeholder: #9ca3af;
+  --rte-border: #d9dce1;
+  --rte-border-strong: #b8bcc4;
+  --rte-toolbar-bg: #fafafa;
+  --rte-btn-hover-bg: #eef0f2;
+  --rte-btn-active-bg: #e2e8f0;
+  --rte-btn-active-color: #1d4ed8;
+  --rte-accent: #2563eb;
+  --rte-focus-ring: rgba(37, 99, 235, 0.35);
+  --rte-error: #dc2626;
+  --rte-error-bg: #fef2f2;
+  --rte-code-bg: #f3f4f6;
+  --rte-blockquote-border: #d9dce1;
+  --rte-table-border: #d9dce1;
+  --rte-table-header-bg: #f5f6f7;
+  --rte-popup-bg: #ffffff;
+  --rte-popup-border: #e5e7eb;
+  --rte-popup-shadow: 0 8px 24px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.08);
+  --rte-radius: 8px;
+  --rte-radius-sm: 5px;
+
+  font-family: var(--rte-font);
+  font-size: var(--rte-font-size);
+  color: var(--rte-text);
+}
+
+@media (prefers-color-scheme: dark) {
+  .rte-outer:not([data-rte-theme='light']) {
+    --rte-bg: #1e2126;
+    --rte-text: #e6e8eb;
+    --rte-text-muted: #9aa1ab;
+    --rte-placeholder: #6b7280;
+    --rte-border: #3a3f47;
+    --rte-border-strong: #4b515b;
+    --rte-toolbar-bg: #24272d;
+    --rte-btn-hover-bg: #2e323a;
+    --rte-btn-active-bg: #333945;
+    --rte-btn-active-color: #93c5fd;
+    --rte-accent: #60a5fa;
+    --rte-focus-ring: rgba(96, 165, 250, 0.35);
+    --rte-error: #f87171;
+    --rte-error-bg: #3a2222;
+    --rte-code-bg: #2a2d33;
+    --rte-blockquote-border: #3a3f47;
+    --rte-table-border: #3a3f47;
+    --rte-table-header-bg: #26292f;
+    --rte-popup-bg: #24272d;
+    --rte-popup-border: #3a3f47;
+    --rte-popup-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.rte-outer[data-rte-theme='dark'] {
+  --rte-bg: #1e2126;
+  --rte-text: #e6e8eb;
+  --rte-text-muted: #9aa1ab;
+  --rte-placeholder: #6b7280;
+  --rte-border: #3a3f47;
+  --rte-border-strong: #4b515b;
+  --rte-toolbar-bg: #24272d;
+  --rte-btn-hover-bg: #2e323a;
+  --rte-btn-active-bg: #333945;
+  --rte-btn-active-color: #93c5fd;
+  --rte-accent: #60a5fa;
+  --rte-focus-ring: rgba(96, 165, 250, 0.35);
+  --rte-error: #f87171;
+  --rte-error-bg: #3a2222;
+  --rte-code-bg: #2a2d33;
+  --rte-blockquote-border: #3a3f47;
+  --rte-table-border: #3a3f47;
+  --rte-table-header-bg: #26292f;
+  --rte-popup-bg: #24272d;
+  --rte-popup-border: #3a3f47;
+  --rte-popup-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.rte-outer,
+.rte-outer * {
+  box-sizing: border-box;
+}
+
+/* ── Wrapper ─────────────────────────────────────────────────────────── */
+.rte-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--rte-bg);
+  border: 1px solid var(--rte-border);
+  border-radius: var(--rte-radius);
+  overflow: hidden;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.rte-wrapper:focus-within {
+  border-color: var(--rte-accent);
+  box-shadow: 0 0 0 3px var(--rte-focus-ring);
+}
+
+.rte-wrapper--error {
+  border-color: var(--rte-error);
+}
+
+.rte-wrapper--error:focus-within {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+}
+
+.rte-wrapper--readonly {
+  background: var(--rte-bg);
+}
+
+.rte-error-text {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--rte-error);
+}
+
+/* ── Toolbar ─────────────────────────────────────────────────────────── */
+.rte-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  padding: 6px;
+  background: var(--rte-toolbar-bg);
+  border-bottom: 1px solid var(--rte-border);
+}
+
+.rte-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: var(--rte-radius-sm);
+  background: transparent;
+  color: var(--rte-text);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.rte-toolbar-btn:hover:not(:disabled) {
+  background: var(--rte-btn-hover-bg);
+}
+
+.rte-toolbar-btn.is-active {
+  background: var(--rte-btn-active-bg);
+  color: var(--rte-btn-active-color);
+}
+
+.rte-toolbar-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.rte-toolbar-divider {
+  width: 1px;
+  align-self: stretch;
+  margin: 4px 4px;
+  background: var(--rte-border);
+}
+
+.rte-swatch-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.rte-swatch-bar {
+  width: 14px;
+  height: 3px;
+  border-radius: 1px;
+}
+
+.rte-collapse-toggle {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: var(--rte-radius-sm);
+  background: transparent;
+  color: var(--rte-text-muted);
+  cursor: pointer;
+  z-index: 2;
+}
+
+.rte-collapse-toggle:hover {
+  background: var(--rte-btn-hover-bg);
+  color: var(--rte-text);
+}
+
+/* ── Heading dropdown ────────────────────────────────────────────────── */
+.rte-popup-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.rte-heading-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 30px;
+  padding: 0 8px;
+  border: none;
+  border-radius: var(--rte-radius-sm);
+  background: transparent;
+  color: var(--rte-text);
+  font-size: 13px;
+  cursor: pointer;
+  min-width: 96px;
+  justify-content: space-between;
+}
+
+.rte-heading-trigger:hover {
+  background: var(--rte-btn-hover-bg);
+}
+
+.rte-heading-popup,
+.rte-color-popup,
+.rte-table-action-popup,
+.rte-table-grid-popup,
+.rte-link-popup {
+  min-width: 160px;
+  padding: 6px;
+  background: var(--rte-popup-bg);
+  border: 1px solid var(--rte-popup-border);
+  border-radius: var(--rte-radius);
+  box-shadow: var(--rte-popup-shadow);
+}
+
+.rte-heading-option {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+  border: none;
+  border-radius: var(--rte-radius-sm);
+  background: transparent;
+  color: var(--rte-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.rte-heading-option:hover {
+  background: var(--rte-btn-hover-bg);
+}
+
+.rte-heading-option.is-active {
+  background: var(--rte-btn-active-bg);
+  color: var(--rte-btn-active-color);
+}
+
+/* ── Color picker ────────────────────────────────────────────────────── */
+.rte-color-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 20px);
+  gap: 6px;
+}
+
+.rte-color-swatch {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid var(--rte-border);
+  cursor: pointer;
+}
+
+.rte-color-custom-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--rte-popup-border);
+}
+
+.rte-color-custom-label {
+  font-size: 12px;
+  color: var(--rte-text-muted);
+}
+
+.rte-color-custom-input {
+  width: 28px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--rte-border);
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+}
+
+/* ── Table grid picker ───────────────────────────────────────────────── */
+.rte-table-grid-label {
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: var(--rte-text-muted);
+  text-align: center;
+}
+
+.rte-table-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rte-table-grid-row {
+  display: flex;
+  gap: 2px;
+}
+
+.rte-table-grid-cell {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--rte-border);
+  border-radius: 2px;
+  background: var(--rte-bg);
+}
+
+.rte-table-grid-cell.is-highlighted {
+  background: var(--rte-accent);
+  border-color: var(--rte-accent);
+}
+
+/* ── Table actions ───────────────────────────────────────────────────── */
+.rte-table-action-btn {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+  border: none;
+  border-radius: var(--rte-radius-sm);
+  background: transparent;
+  color: var(--rte-text);
+  text-align: left;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.rte-table-action-btn:hover {
+  background: var(--rte-btn-hover-bg);
+}
+
+.rte-table-action-btn--danger {
+  color: var(--rte-error);
+}
+
+.rte-table-action-divider {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--rte-popup-border);
+}
+
+/* ── Link popup ──────────────────────────────────────────────────────── */
+.rte-link-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 260px;
+}
+
+.rte-link-row {
+  display: flex;
+  gap: 6px;
+}
+
+.rte-link-input {
+  flex: 1;
+  min-width: 0;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--rte-border);
+  border-radius: var(--rte-radius-sm);
+  background: var(--rte-bg);
+  color: var(--rte-text);
+  font-size: 13px;
+}
+
+.rte-link-input:focus {
+  outline: none;
+  border-color: var(--rte-accent);
+}
+
+.rte-link-apply {
+  height: 30px;
+  padding: 0 12px;
+  border: none;
+  border-radius: var(--rte-radius-sm);
+  background: var(--rte-accent);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* ── Slash-command / mention popups ─────────────────────────────────────
+   Rendered outside `.rte-outer` (appended to <body> or the fullscreen
+   dialog), so tokens are re-declared here rather than inherited. ── */
+.rte-suggestion-popup {
+  position: fixed;
+  z-index: 9999;
+  font-family: var(--rte-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+  font-size: 13px;
+}
+
+.rte-slash-dropdown,
+.rte-mention-dropdown {
+  min-width: 220px;
+  max-width: 280px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 4px;
+  background: var(--rte-popup-bg, #fff);
+  border: 1px solid var(--rte-popup-border, #e5e7eb);
+  border-radius: var(--rte-radius, 8px);
+  box-shadow: var(--rte-popup-shadow, 0 8px 24px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.08));
+}
+
+.rte-slash-header {
+  padding: 6px 8px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--rte-text-muted, #6b7280);
+}
+
+.rte-slash-item,
+.rte-mention-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 8px;
+  border: none;
+  border-radius: var(--rte-radius-sm, 5px);
+  background: transparent;
+  color: var(--rte-text, #1f2328);
+  text-align: left;
+  cursor: pointer;
+}
+
+.rte-slash-item--empty,
+.rte-mention-item--empty {
+  color: var(--rte-text-muted, #9ca3af);
+  cursor: default;
+}
+
+.rte-slash-item--selected,
+.rte-mention-item--selected {
+  background: var(--rte-btn-active-bg, #e2e8f0);
+}
+
+.rte-slash-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  background: var(--rte-code-bg, #f3f4f6);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.rte-slash-text {
+  min-width: 0;
+}
+
+.rte-slash-title {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.rte-slash-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  color: var(--rte-text-muted, #6b7280);
+}
+
+.rte-mention-avatar {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.rte-mention-avatar--initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--rte-btn-active-bg, #e2e8f0);
+  color: var(--rte-btn-active-color, #1d4ed8);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.rte-mention-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rte-mention-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  color: var(--rte-text-muted, #6b7280);
+}
+
+.rte-mention-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--rte-border, #d9dce1);
+  border-top-color: var(--rte-accent, #2563eb);
+  border-radius: 50%;
+  animation: rte-spin 0.6s linear infinite;
+}
+
+@keyframes rte-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rte-outer .ProseMirror .rte-mention-chip {
+  padding: 0 3px;
+  border-radius: 4px;
+  background: var(--rte-btn-active-bg);
+  color: var(--rte-btn-active-color);
+  font-weight: 500;
+}
+
+.rte-emoji-item-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  flex-shrink: 0;
+  font-size: 18px;
+}
+
+.rte-emoji-picker-wrapper {
+  line-height: 1;
+}
+
+/* ── Voice dictation ─────────────────────────────────────────────────── */
+.rte-mic-btn--listening {
+  color: #dc2626;
+  animation: rte-mic-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes rte-mic-pulse {
+  0%,
+  100% {
+    background: transparent;
+  }
+  50% {
+    background: rgba(220, 38, 38, 0.12);
+  }
+}
+
+.rte-voice-error {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 280px;
+}
+
+.rte-voice-error-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rte-error, #dc2626);
+}
+
+.rte-voice-error-text {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--rte-text-muted, #6b7280);
+}
+
+.rte-voice-error-dismiss {
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 5px 10px;
+  border: 1px solid var(--rte-border, #d9dce1);
+  border-radius: var(--rte-radius-sm, 5px);
+  background: var(--rte-bg, #fff);
+  color: var(--rte-text, #1f2328);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.rte-voice-error-dismiss:hover {
+  background: var(--rte-btn-hover-bg, #eef0f2);
+}
+
+/* ── Editor content area ─────────────────────────────────────────────── */
+.rte-editor-area {
+  flex: 1;
+  min-height: 0;
+}
+
+.rte-editor-content-wrapper {
+  height: 100%;
+}
+
+.rte-outer .ProseMirror {
+  min-height: 160px;
+  max-height: 480px;
+  overflow-y: auto;
+  padding: 12px 14px;
+  outline: none;
+  line-height: 1.6;
+}
+
+.rte-wrapper--collapsed .ProseMirror {
+  min-height: 40px;
+  max-height: 40px;
+  overflow: hidden;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 36px; /* room for the floating expand chevron */
+}
+
+.rte-wrapper--fullscreen .rte-outer .ProseMirror,
+.rte-fullscreen-dialog .ProseMirror {
+  max-height: none;
+  height: 100%;
+}
+
+/* ── Read-only preview ────────────────────────────────────────────────
+   RichTextPreview reuses the `.ProseMirror` class so every typography
+   rule above (headings, lists, tables, attachment chips, …) applies
+   identically — this just undoes the live editor's own
+   editable-surface chrome (fixed height/scroll/outline/cursor). ── */
+.rte-outer .ProseMirror.rte-preview {
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+  padding: 0;
+  cursor: default;
+}
+
+.rte-preview-empty {
+  color: var(--rte-placeholder, #9ca3af);
+}
+
+.rte-outer .ProseMirror p {
+  margin: 0 0 0.6em;
+}
+
+.rte-outer .ProseMirror p:last-child {
+  margin-bottom: 0;
+}
+
+.rte-outer .ProseMirror h1,
+.rte-outer .ProseMirror h2,
+.rte-outer .ProseMirror h3 {
+  margin: 0.8em 0 0.4em;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.rte-outer .ProseMirror h1 {
+  font-size: 1.5em;
+}
+
+.rte-outer .ProseMirror h2 {
+  font-size: 1.25em;
+}
+
+.rte-outer .ProseMirror h3 {
+  font-size: 1.1em;
+}
+
+.rte-outer .ProseMirror ul,
+.rte-outer .ProseMirror ol {
+  padding-left: 1.4em;
+  margin: 0 0 0.6em;
+}
+
+.rte-outer .ProseMirror li p {
+  margin: 0;
+}
+
+.rte-outer .ProseMirror a {
+  color: var(--rte-accent);
+  text-decoration: underline;
+}
+
+.rte-outer .ProseMirror blockquote {
+  margin: 0 0 0.6em;
+  padding-left: 1em;
+  border-left: 3px solid var(--rte-blockquote-border);
+  color: var(--rte-text-muted);
+}
+
+.rte-outer .ProseMirror pre {
+  margin: 0 0 0.6em;
+  padding: 10px 12px;
+  border-radius: var(--rte-radius-sm);
+  background: var(--rte-code-bg);
+  overflow-x: auto;
+}
+
+.rte-outer .ProseMirror pre code {
+  font-family: var(--rte-mono-font);
+  font-size: 0.9em;
+  background: none;
+  padding: 0;
+}
+
+.rte-outer .ProseMirror code {
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--rte-code-bg);
+  font-family: var(--rte-mono-font);
+  font-size: 0.9em;
+}
+
+.rte-outer .ProseMirror hr {
+  margin: 1em 0;
+  border: none;
+  border-top: 1px solid var(--rte-border);
+}
+
+.rte-outer .ProseMirror mark {
+  border-radius: 2px;
+  padding: 0 0.05em;
+}
+
+.rte-outer .ProseMirror table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 0 0 0.6em;
+}
+
+.rte-outer .ProseMirror th,
+.rte-outer .ProseMirror td {
+  min-width: 60px;
+  padding: 6px 8px;
+  border: 1px solid var(--rte-table-border);
+  vertical-align: top;
+}
+
+.rte-outer .ProseMirror th {
+  background: var(--rte-table-header-bg);
+  font-weight: 600;
+  text-align: left;
+}
+
+.rte-outer .ProseMirror .selectedCell {
+  background: var(--rte-btn-active-bg);
+}
+
+.rte-outer .ProseMirror p.is-editor-empty:first-child::before,
+.rte-outer .ProseMirror .is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  color: var(--rte-placeholder);
+  pointer-events: none;
+}
+
+/* ── Attachments (image + file) ─────────────────────────────────────────
+   ProseMirror node views render outside React's own tree updates for
+   these attrs, so keep tokens self-contained via var() fallbacks — same
+   reasoning as the slash/mention popups above. ── */
+.rte-outer .ProseMirror .rte-image-attachment {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0 0 0.6em;
+}
+
+.rte-image-attachment-frame {
+  position: relative;
+  display: inline-block;
+  min-width: 48px;
+  min-height: 48px;
+  max-width: 100%;
+  border-radius: var(--rte-radius-sm, 5px);
+  overflow: hidden;
+  line-height: 0;
+}
+
+.rte-image-attachment-frame img {
+  display: block;
+  max-width: 100%;
+  max-height: 360px;
+}
+
+.rte-attachment-caption {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--rte-text-muted, #6b7280);
+}
+
+.rte-attachment-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.rte-attachment-overlay--error {
+  background: rgba(127, 29, 29, 0.65);
+}
+
+.rte-attachment-error-text {
+  max-width: 90%;
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+}
+
+.rte-attachment-spinner {
+  width: 22px;
+  height: 22px;
+  border: 2.5px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: rte-spin 0.6s linear infinite;
+  flex-shrink: 0;
+}
+
+.rte-file-chip .rte-attachment-spinner {
+  width: 16px;
+  height: 16px;
+  border-color: var(--rte-border, #d9dce1);
+  border-top-color: var(--rte-accent, #2563eb);
+}
+
+.rte-attachment-progress {
+  width: 100%;
+  max-width: 160px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.35);
+  overflow: hidden;
+}
+
+.rte-file-chip .rte-attachment-progress {
+  max-width: none;
+  margin-top: 4px;
+  background: var(--rte-border, #d9dce1);
+}
+
+.rte-attachment-progress span {
+  display: block;
+  height: 100%;
+  background: #fff;
+  transition: width 0.15s ease;
+}
+
+.rte-file-chip .rte-attachment-progress span {
+  background: var(--rte-accent, #2563eb);
+}
+
+.rte-attachment-retry {
+  padding: 4px 10px;
+  border: none;
+  border-radius: var(--rte-radius-sm, 5px);
+  background: #fff;
+  color: var(--rte-text, #1f2328);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.rte-file-chip .rte-attachment-retry {
+  background: transparent;
+  border: 1px solid var(--rte-border, #d9dce1);
+  color: var(--rte-accent, #2563eb);
+}
+
+.rte-attachment-remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.55);
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.rte-attachment-remove:hover {
+  background: rgba(15, 23, 42, 0.8);
+}
+
+/* File chip (non-image attachment) */
+.rte-outer .ProseMirror .rte-file-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 320px;
+  margin: 0 0 0.6em;
+  padding: 8px 10px;
+  border: 1px solid var(--rte-border, #d9dce1);
+  border-radius: var(--rte-radius, 8px);
+  background: var(--rte-toolbar-bg, #fafafa);
+}
+
+.rte-file-chip--missing {
+  opacity: 0.6;
+}
+
+.rte-file-chip-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.rte-file-chip-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  background: var(--rte-code-bg, #f3f4f6);
+}
+
+.rte-file-chip-ext {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--rte-text-muted, #6b7280);
+}
+
+.rte-file-chip-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.rte-file-chip-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.rte-file-chip-sub {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  color: var(--rte-text-muted, #6b7280);
+}
+
+.rte-file-chip-sub.is-error {
+  color: var(--rte-error, #dc2626);
+}
+
+.rte-file-chip-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: var(--rte-radius-sm, 5px);
+}
+
+.rte-file-chip-download::before {
+  content: '⬇';
+  font-size: 13px;
+  color: var(--rte-text-muted, #6b7280);
+}
+
+.rte-file-chip-download:hover::before {
+  color: var(--rte-text, #1f2328);
+}
+
+.rte-file-chip .rte-attachment-remove {
+  position: static;
+  width: 22px;
+  height: 22px;
+  background: transparent;
+  color: var(--rte-text-muted, #6b7280);
+  flex-shrink: 0;
+}
+
+.rte-file-chip .rte-attachment-remove:hover {
+  background: var(--rte-btn-hover-bg, #eef0f2);
+  color: var(--rte-text, #1f2328);
+}
+
+/* ── Fullscreen ──────────────────────────────────────────────────────── */
+.rte-fullscreen-dialog {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  margin: 0;
+  padding: 24px;
+  border: none;
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.rte-fullscreen-dialog::backdrop {
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.rte-fullscreen-dialog .rte-outer {
+  height: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.rte-fullscreen-dialog .rte-wrapper {
+  height: 100%;
+}
+
+.rte-fullscreen-dialog .rte-editor-area {
+  flex: 1;
+  overflow: hidden;
+}

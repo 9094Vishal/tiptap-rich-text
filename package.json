@@ -1,0 +1,17 @@
+{
+  "name": "tiptap-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": [
+    "packages/*",
+    "playground"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace tiptap-react-editor",
+    "dev": "npm run dev --workspace tiptap-react-editor",
+    "lint": "npm run lint --workspace tiptap-react-editor",
+    "typecheck": "npm run typecheck --workspace tiptap-react-editor",
+    "test": "npm run test --workspace tiptap-react-editor",
+    "playground": "npm run build --workspace tiptap-react-editor && npm run dev --workspace playground"
+  }
+}
